@@ -14,15 +14,19 @@ class PaginaDeCadastroModel extends FlutterFlowModel<PaginaDeCadastroWidget> {
   FocusNode? emailFocusNode;
   TextEditingController? emailTextController;
   String? Function(BuildContext, String?)? emailTextControllerValidator;
+  // State field(s) for CPF widget.
+  FocusNode? cpfFocusNode;
+  TextEditingController? cpfTextController;
+  String? Function(BuildContext, String?)? cpfTextControllerValidator;
+  // State field(s) for NumeroDeTelefone widget.
+  FocusNode? numeroDeTelefoneFocusNode;
+  TextEditingController? numeroDeTelefoneTextController;
+  String? Function(BuildContext, String?)?
+      numeroDeTelefoneTextControllerValidator;
   // State field(s) for Senha widget.
   FocusNode? senhaFocusNode;
   TextEditingController? senhaTextController;
   String? Function(BuildContext, String?)? senhaTextControllerValidator;
-  // State field(s) for ConfirmarSenha widget.
-  FocusNode? confirmarSenhaFocusNode;
-  TextEditingController? confirmarSenhaTextController;
-  String? Function(BuildContext, String?)?
-      confirmarSenhaTextControllerValidator;
 
   @override
   void initState(BuildContext context) {}
@@ -35,10 +39,13 @@ class PaginaDeCadastroModel extends FlutterFlowModel<PaginaDeCadastroWidget> {
     emailFocusNode?.dispose();
     emailTextController?.dispose();
 
+    cpfFocusNode?.dispose();
+    cpfTextController?.dispose();
+
+    numeroDeTelefoneFocusNode?.dispose();
+    numeroDeTelefoneTextController?.dispose();
+
     senhaFocusNode?.dispose();
     senhaTextController?.dispose();
-
-    confirmarSenhaFocusNode?.dispose();
-    confirmarSenhaTextController?.dispose();
   }
 }

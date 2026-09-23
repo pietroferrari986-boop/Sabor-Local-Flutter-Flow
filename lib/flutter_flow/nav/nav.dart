@@ -33,24 +33,55 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       navigatorKey: appNavigatorKey,
-      errorBuilder: (context, state) => HomePageWidget(),
+      errorBuilder: (context, state) => appStateNotifier.showSplashImage
+          ? Builder(
+              builder: (context) => Container(
+                color: Colors.transparent,
+                child: Image.asset(
+                  'assets/images/WhatsApp_Image_2026-09-08_at_16.22.11.jpeg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          : PagDeLoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => HomePageWidget(),
-        ),
-        FFRoute(
-          name: HomePageWidget.routeName,
-          path: HomePageWidget.routePath,
-          builder: (context, params) => HomePageWidget(),
+          builder: (context, _) => appStateNotifier.showSplashImage
+              ? Builder(
+                  builder: (context) => Container(
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/WhatsApp_Image_2026-09-08_at_16.22.11.jpeg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              : PagDeLoginWidget(),
         ),
         FFRoute(
           name: PaginaDeCadastroWidget.routeName,
           path: PaginaDeCadastroWidget.routePath,
           builder: (context, params) => PaginaDeCadastroWidget(),
+        ),
+        FFRoute(
+          name: CadastroEnderecoWidget.routeName,
+          path: CadastroEnderecoWidget.routePath,
+          builder: (context, params) => CadastroEnderecoWidget(),
+        ),
+        FFRoute(
+          name: PagDeLoginWidget.routeName,
+          path: PagDeLoginWidget.routePath,
+          builder: (context, params) => PagDeLoginWidget(),
+        ),
+        FFRoute(
+          name: FunctionTituloWidget.routeName,
+          path: FunctionTituloWidget.routePath,
+          builder: (context, params) => FunctionTituloWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
+      observers: ffNavigatorObservers,
     );
 
 extension NavParamExtensions on Map<String, String?> {

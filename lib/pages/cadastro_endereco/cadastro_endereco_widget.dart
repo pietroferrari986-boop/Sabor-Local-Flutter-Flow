@@ -1,48 +1,52 @@
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'pagina_de_cadastro_model.dart';
-export 'pagina_de_cadastro_model.dart';
+import 'cadastro_endereco_model.dart';
+export 'cadastro_endereco_model.dart';
 
 /// icon
-class PaginaDeCadastroWidget extends StatefulWidget {
-  const PaginaDeCadastroWidget({super.key});
+class CadastroEnderecoWidget extends StatefulWidget {
+  const CadastroEnderecoWidget({super.key});
 
-  static String routeName = 'PaginaDeCadastro';
-  static String routePath = '/paginaDeCadastro';
+  static String routeName = 'CadastroEndereco';
+  static String routePath = '/cadastroEndereco';
 
   @override
-  State<PaginaDeCadastroWidget> createState() => _PaginaDeCadastroWidgetState();
+  State<CadastroEnderecoWidget> createState() => _CadastroEnderecoWidgetState();
 }
 
-class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
-  late PaginaDeCadastroModel _model;
+class _CadastroEnderecoWidgetState extends State<CadastroEnderecoWidget> {
+  late CadastroEnderecoModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PaginaDeCadastroModel());
+    _model = createModel(context, () => CadastroEnderecoModel());
 
-    _model.nomeTextController ??= TextEditingController();
-    _model.nomeFocusNode ??= FocusNode();
+    _model.cepTextController ??= TextEditingController();
+    _model.cepFocusNode ??= FocusNode();
 
-    _model.emailTextController ??= TextEditingController();
-    _model.emailFocusNode ??= FocusNode();
+    _model.logradouroTextController ??= TextEditingController();
+    _model.logradouroFocusNode ??= FocusNode();
 
-    _model.cpfTextController ??= TextEditingController(text: 'CPF');
-    _model.cpfFocusNode ??= FocusNode();
+    _model.numerodaruaTextController ??= TextEditingController();
+    _model.numerodaruaFocusNode ??= FocusNode();
 
-    _model.numeroDeTelefoneTextController ??= TextEditingController();
-    _model.numeroDeTelefoneFocusNode ??= FocusNode();
+    _model.bairroTextController ??= TextEditingController();
+    _model.bairroFocusNode ??= FocusNode();
 
-    _model.senhaTextController ??= TextEditingController();
-    _model.senhaFocusNode ??= FocusNode();
+    _model.complementoTextController ??= TextEditingController();
+    _model.complementoFocusNode ??= FocusNode();
+
+    _model.referenciaTextController ??= TextEditingController();
+    _model.referenciaFocusNode ??= FocusNode();
   }
 
   @override
@@ -75,7 +79,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                     child: Text(
-                      'Crie sua conta aqui!',
+                      'Cadastre seu endereço',
                       textAlign: TextAlign.center,
                       style: FlutterFlowTheme.of(context).titleLarge.override(
                             font: GoogleFonts.outfit(
@@ -102,7 +106,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                       ),
                       decoration: BoxDecoration(),
                       child: Text(
-                        'Cadastre-se para aproveitar tudo que o Sabor Local tem a oferecer.',
+                        'Cadastre aqui seu endereço.',
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               font: GoogleFonts.plusJakartaSans(
@@ -132,14 +136,42 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                     decoration: BoxDecoration(),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           width: 400.0,
                           child: TextFormField(
-                            controller: _model.nomeTextController,
-                            focusNode: _model.nomeFocusNode,
+                            controller: _model.cepTextController,
+                            focusNode: _model.cepFocusNode,
+                            onChanged: (_) => EasyDebounce.debounce(
+                              '_model.cepTextController',
+                              Duration(milliseconds: 2000),
+                              () async {
+                                safeSetState(() {
+                                  _model.cepTextController?.text =
+                                      _model.cepTextController.text;
+                                });
+                                _model.apiResultvxk = await BuscaCEPCall.call(
+                                  cep: _model.cepTextController.text,
+                                );
+
+                                safeSetState(() {
+                                  _model.logradouroTextController?.text =
+                                      BuscaCEPCall.endereco(
+                                    (_model.apiResultvxk?.jsonBody ?? ''),
+                                  )!;
+                                });
+                                safeSetState(() {
+                                  _model.bairroTextController?.text =
+                                      BuscaCEPCall.bairro(
+                                    (_model.apiResultvxk?.jsonBody ?? ''),
+                                  )!;
+                                });
+
+                                safeSetState(() {});
+                              },
+                            ),
                             autofocus: false,
                             enabled: true,
                             obscureText: false,
@@ -166,7 +198,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                                         .fontStyle,
                                     lineHeight: 0.0,
                                   ),
-                              hintText: 'Nome completo',
+                              hintText: 'CEP',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -219,7 +251,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                               filled: true,
                               fillColor: Color(0xFFFCB5B6),
                               prefixIcon: Icon(
-                                Icons.perm_identity,
+                                Icons.location_on_rounded,
                                 color: Colors.black,
                                 size: 24.0,
                               ),
@@ -250,15 +282,15 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
                             enableInteractiveSelection: true,
-                            validator: _model.nomeTextControllerValidator
+                            validator: _model.cepTextControllerValidator
                                 .asValidator(context),
                           ),
                         ),
                         Container(
                           width: 400.0,
                           child: TextFormField(
-                            controller: _model.emailTextController,
-                            focusNode: _model.emailFocusNode,
+                            controller: _model.logradouroTextController,
+                            focusNode: _model.logradouroFocusNode,
                             autofocus: false,
                             enabled: true,
                             obscureText: false,
@@ -283,7 +315,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                                         .labelMedium
                                         .fontStyle,
                                   ),
-                              hintText: 'E-mail',
+                              hintText: 'Logradouro',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -336,7 +368,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                               filled: true,
                               fillColor: Color(0xFFFCB5B6),
                               prefixIcon: Icon(
-                                Icons.email_outlined,
+                                Icons.directions_car,
                                 color: Colors.black,
                                 size: 24.0,
                               ),
@@ -365,130 +397,15 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
                             enableInteractiveSelection: true,
-                            validator: _model.emailTextControllerValidator
+                            validator: _model.logradouroTextControllerValidator
                                 .asValidator(context),
                           ),
                         ),
                         Container(
                           width: 400.0,
                           child: TextFormField(
-                            controller: _model.cpfTextController,
-                            focusNode: _model.cpfFocusNode,
-                            autofocus: false,
-                            enabled: true,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              labelStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    font: GoogleFonts.plusJakartaSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
-                                  ),
-                              hintText: functions.validarCPF('').toString(),
-                              hintStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    font: GoogleFonts.plusJakartaSans(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                    color: Color(0xFF2D2624),
-                                    fontSize: 15.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
-                                  ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFFFCB5B6),
-                              prefixIcon: Icon(
-                                Icons.description,
-                                color: Colors.black,
-                                size: 24.0,
-                              ),
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.plusJakartaSans(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  fontSize: 15.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                            textAlign: TextAlign.start,
-                            cursorColor:
-                                FlutterFlowTheme.of(context).primaryText,
-                            enableInteractiveSelection: true,
-                            validator: _model.cpfTextControllerValidator
-                                .asValidator(context),
-                          ),
-                        ),
-                        Container(
-                          width: 350.0,
-                          child: TextFormField(
-                            controller: _model.numeroDeTelefoneTextController,
-                            focusNode: _model.numeroDeTelefoneFocusNode,
+                            controller: _model.numerodaruaTextController,
+                            focusNode: _model.numerodaruaFocusNode,
                             autofocus: false,
                             enabled: true,
                             obscureText: false,
@@ -566,7 +483,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                               filled: true,
                               fillColor: Color(0xFFFCB5B6),
                               prefixIcon: Icon(
-                                Icons.phone_enabled_outlined,
+                                Icons.numbers_sharp,
                                 color: Colors.black,
                                 size: 24.0,
                               ),
@@ -595,16 +512,15 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
                             enableInteractiveSelection: true,
-                            validator: _model
-                                .numeroDeTelefoneTextControllerValidator
+                            validator: _model.numerodaruaTextControllerValidator
                                 .asValidator(context),
                           ),
                         ),
                         Container(
                           width: 350.0,
                           child: TextFormField(
-                            controller: _model.senhaTextController,
-                            focusNode: _model.senhaFocusNode,
+                            controller: _model.bairroTextController,
+                            focusNode: _model.bairroFocusNode,
                             autofocus: false,
                             enabled: true,
                             obscureText: false,
@@ -629,7 +545,122 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                                         .labelMedium
                                         .fontStyle,
                                   ),
-                              hintText: 'Senha',
+                              hintText: 'Bairro',
+                              hintStyle: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    font: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontStyle,
+                                    ),
+                                    color: Color(0xFF2D2624),
+                                    fontSize: 15.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .fontStyle,
+                                  ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0x00000000),
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0x00000000),
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              filled: true,
+                              fillColor: Color(0xFFFCB5B6),
+                              prefixIcon: Icon(
+                                Icons.local_hotel,
+                                color: Colors.black,
+                                size: 24.0,
+                              ),
+                            ),
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.plusJakartaSans(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  fontSize: 15.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                            textAlign: TextAlign.start,
+                            cursorColor:
+                                FlutterFlowTheme.of(context).primaryText,
+                            enableInteractiveSelection: true,
+                            validator: _model.bairroTextControllerValidator
+                                .asValidator(context),
+                          ),
+                        ),
+                        Container(
+                          width: 350.0,
+                          child: TextFormField(
+                            controller: _model.complementoTextController,
+                            focusNode: _model.complementoFocusNode,
+                            autofocus: false,
+                            enabled: true,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              labelStyle: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    font: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .fontStyle,
+                                    ),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .fontStyle,
+                                  ),
+                              hintText: 'Complemento',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -711,58 +742,157 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
                             enableInteractiveSelection: true,
-                            validator: _model.senhaTextControllerValidator
+                            validator: _model.complementoTextControllerValidator
                                 .asValidator(context),
                           ),
                         ),
-                      ].divide(SizedBox(height: 35.0)),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 5.0, 0.0),
+                                child: TextFormField(
+                                  controller: _model.referenciaTextController,
+                                  focusNode: _model.referenciaFocusNode,
+                                  autofocus: false,
+                                  enabled: true,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    labelStyle: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .override(
+                                          font: GoogleFonts.plusJakartaSans(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontStyle,
+                                        ),
+                                    hintText: 'Referência',
+                                    hintStyle: FlutterFlowTheme.of(context)
+                                        .labelMedium
+                                        .override(
+                                          font: GoogleFonts.plusJakartaSans(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontStyle,
+                                          ),
+                                          color: Color(0xFF2D2624),
+                                          fontSize: 15.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium
+                                                  .fontStyle,
+                                        ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0x00000000),
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color:
+                                            FlutterFlowTheme.of(context).error,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color:
+                                            FlutterFlowTheme.of(context).error,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    filled: true,
+                                    fillColor: Color(0xFFFCB5B6),
+                                    prefixIcon: Icon(
+                                      Icons.house_outlined,
+                                      color: Colors.black,
+                                      size: 24.0,
+                                    ),
+                                  ),
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.plusJakartaSans(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        fontSize: 15.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                  textAlign: TextAlign.start,
+                                  cursorColor:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  enableInteractiveSelection: true,
+                                  validator: _model
+                                      .referenciaTextControllerValidator
+                                      .asValidator(context),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ].divide(SizedBox(height: 25.0)),
                     ),
                   ),
                   Padding(
                     padding:
                         EdgeInsetsDirectional.fromSTEB(80.0, 0.0, 80.0, 20.0),
                     child: FFButtonWidget(
-                      onPressed: () async {
-                        if (functions
-                            .validarCPF(_model.cpfTextController.text)) {
-                          await showDialog(
-                            context: context,
-                            builder: (alertDialogContext) {
-                              return AlertDialog(
-                                title: Text('titulo'),
-                                content: Text('CPF OK'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(alertDialogContext),
-                                    child: Text('Ok'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-
-                          context.pushNamed(CadastroEnderecoWidget.routeName);
-                        } else {
-                          await showDialog(
-                            context: context,
-                            builder: (alertDialogContext) {
-                              return AlertDialog(
-                                title: Text('titulo'),
-                                content: Text('Esse CPF não é válido'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(alertDialogContext),
-                                    child: Text('Ok'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
+                      onPressed: () {
+                        print('BotaoDeCadastrar pressed ...');
                       },
-                      text: 'Continuar',
+                      text: 'Cadastrar Endereço',
                       icon: Icon(
                         Icons.arrow_forward,
                         size: 15.0,

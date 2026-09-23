@@ -1,4 +1,4 @@
-package com.mycompany.paglogin
+package com.mycompany.saborlocalsentinelacopy
 
 import io.flutter.embedding.android.FlutterActivity
 
