@@ -14,10 +14,10 @@ class PaginaDeCadastroModel extends FlutterFlowModel<PaginaDeCadastroWidget> {
   FocusNode? emailFocusNode;
   TextEditingController? emailTextController;
   String? Function(BuildContext, String?)? emailTextControllerValidator;
-  // State field(s) for CPF widget.
-  FocusNode? cpfFocusNode;
-  TextEditingController? cpfTextController;
-  String? Function(BuildContext, String?)? cpfTextControllerValidator;
+  // State field(s) for TF_CPF widget.
+  FocusNode? tfCpfFocusNode;
+  TextEditingController? tfCpfTextController;
+  String? Function(BuildContext, String?)? tfCpfTextControllerValidator;
   // State field(s) for NumeroDeTelefone widget.
   FocusNode? numeroDeTelefoneFocusNode;
   TextEditingController? numeroDeTelefoneTextController;
@@ -39,8 +39,8 @@ class PaginaDeCadastroModel extends FlutterFlowModel<PaginaDeCadastroWidget> {
     emailFocusNode?.dispose();
     emailTextController?.dispose();
 
-    cpfFocusNode?.dispose();
-    cpfTextController?.dispose();
+    tfCpfFocusNode?.dispose();
+    tfCpfTextController?.dispose();
 
     numeroDeTelefoneFocusNode?.dispose();
     numeroDeTelefoneTextController?.dispose();

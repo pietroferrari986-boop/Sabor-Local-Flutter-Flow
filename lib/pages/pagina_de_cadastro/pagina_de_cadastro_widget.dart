@@ -35,8 +35,8 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
     _model.emailTextController ??= TextEditingController();
     _model.emailFocusNode ??= FocusNode();
 
-    _model.cpfTextController ??= TextEditingController(text: 'CPF');
-    _model.cpfFocusNode ??= FocusNode();
+    _model.tfCpfTextController ??= TextEditingController();
+    _model.tfCpfFocusNode ??= FocusNode();
 
     _model.numeroDeTelefoneTextController ??= TextEditingController();
     _model.numeroDeTelefoneFocusNode ??= FocusNode();
@@ -372,8 +372,8 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                         Container(
                           width: 400.0,
                           child: TextFormField(
-                            controller: _model.cpfTextController,
-                            focusNode: _model.cpfFocusNode,
+                            controller: _model.tfCpfTextController,
+                            focusNode: _model.tfCpfFocusNode,
                             autofocus: false,
                             enabled: true,
                             obscureText: false,
@@ -398,7 +398,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                                         .labelMedium
                                         .fontStyle,
                                   ),
-                              hintText: functions.validarCPF('').toString(),
+                              hintText: 'CPF',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
@@ -480,7 +480,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
                             enableInteractiveSelection: true,
-                            validator: _model.cpfTextControllerValidator
+                            validator: _model.tfCpfTextControllerValidator
                                 .asValidator(context),
                           ),
                         ),
@@ -724,7 +724,7 @@ class _PaginaDeCadastroWidgetState extends State<PaginaDeCadastroWidget> {
                     child: FFButtonWidget(
                       onPressed: () async {
                         if (functions
-                            .validarCPF(_model.cpfTextController.text)) {
+                            .validarCPF(_model.tfCpfTextController.text)) {
                           await showDialog(
                             context: context,
                             builder: (alertDialogContext) {
